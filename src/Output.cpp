@@ -2,7 +2,10 @@
 
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
+
+#include <memory>
 
 namespace py = pybind11;
 
@@ -26,13 +29,15 @@ void output(py::module &m)
             }
             return std::string(name);
         })
-        // Expose data member
-        .def_property_readonly("data", [](Trace &trace) {
-            auto &vec = trace.data_;
-            double *data = vec.data();
-            size_t size = vec.size();
-            return py::array_t<double>(size, data);
-        }, py::return_value_policy::reference_internal);
+        // Expose data member. Upstream returned `py::array_t<double>(size,
+        // ptr)` with return_value_policy::reference_internal, which yielded an
+        // all-zero array even though trace.data_ held the correct values.
+        // aether_sims fork fix: return the vector and let pybind's STL caster
+        // copy it element-wise (np.asarray() on the caller side gives a numpy
+        // array). Correctness over the raw-buffer trick.
+        .def_property_readonly("data", [](const Trace &trace) {
+            return trace.data_;
+        });
 
     // Expose traces vector
     py::bind_vector<std::vector<Trace>>(m, "Traces");
@@ -41,11 +46,11 @@ void output(py::module &m)
     py::class_<Output>(m, "Output")
         // Initialize output
         .def(py::init([](Input &input, Matrix &matrix, Simulation &simulation) {
-                // Create a JoSIM::Output object
-                Output output;
-                // Call the write_output function
-                output.write_output(input, matrix, simulation);
-                // Return the output object
+                // Construct on the heap so Python holds the exact Output that
+                // write_output filled. Returning by value copied/moved it and
+                // dropped the trace data (all-zero traces). aether_sims fork fix.
+                auto output = std::make_unique<Output>();
+                output->write_output(input, matrix, simulation);
                 return output;
              }),
              py::keep_alive<1, 2>(), py::keep_alive<1, 3>(),

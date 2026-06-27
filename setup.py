@@ -126,7 +126,7 @@ setup(
     url="https://github.com/JoeyDelp/pyjosim",
     license="Apache",
     # Package data
-    ext_modules=[CMakeExtension("cmake_example")],
+    ext_modules=[CMakeExtension("pyjosim")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     extras_require={"test": ["pytest>=6.0"]},

@@ -6,6 +6,7 @@
 #include <pybind11/pybind11.h>
 
 #include <iostream>
+#include <memory>
 
 namespace py = pybind11;
 
@@ -20,10 +21,11 @@ void simulation(py::module &m)
         .def(py::init([](Input &input, Matrix &matrix) {
                  scoped_cout_null cout;
                  py::scoped_estream_redirect cerr;
-                 // Create a JoSIM::Simulation object
-                 Simulation simulation(input, matrix);
-                 // Return the simulation object
-                 return simulation;
+                 // Construct on the heap and hand the holder the exact object
+                 // that ran the transient. Returning by value let pybind copy/
+                 // move it, which dropped the populated `results` (all-zero
+                 // Output.traces). aether_sims fork fix.
+                 return std::make_unique<Simulation>(input, matrix);
              }),
              py::keep_alive<1, 2>(), py::keep_alive<1, 3>());
 }
