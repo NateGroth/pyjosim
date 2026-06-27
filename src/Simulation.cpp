@@ -70,10 +70,29 @@ void simulation(py::module &m)
              [](Simulation &self, std::function<void(int64_t, double)> f) {
                  self.post_step_hook_ = std::move(f);
              })
-        .def("clear_hooks", [](Simulation &self) {
-            self.pre_step_hook_ = nullptr;
-            self.post_step_hook_ = nullptr;
-        });
+        .def("clear_hooks",
+             [](Simulation &self) {
+                 self.pre_step_hook_ = nullptr;
+                 self.post_step_hook_ = nullptr;
+             })
+        // Per-junction electro-thermal access by label (aether_sims D1/D2).
+        .def(
+            "set_jj_temperature",
+            [](Simulation &self, Matrix &matrix, const std::string &label,
+               double T) { self.set_jj_temperature(matrix, label, T); },
+            py::arg("matrix"), py::arg("label"), py::arg("T"))
+        .def(
+            "set_all_temperatures",
+            [](Simulation &self, Matrix &matrix, double T) {
+                self.set_all_temperatures(matrix, T);
+            },
+            py::arg("matrix"), py::arg("T"))
+        .def(
+            "jj_ic",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.jj_ic(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"));
 }
 
 } // namespace pyjosim
