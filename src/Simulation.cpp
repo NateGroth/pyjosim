@@ -59,6 +59,16 @@ void simulation(py::module &m)
             },
             py::arg("matrix"))
         .def("finish", &Simulation::finish)
+        // D7 reduce_step support for the stepped path.
+        .def("needs_reduction", &Simulation::needs_reduction)
+        .def(
+            "reduce_and_restart",
+            [](Simulation &self, Input &input, Matrix &matrix) {
+                scoped_cout_null cout;
+                py::scoped_estream_redirect cerr;
+                self.reduce_and_restart(input, matrix);
+            },
+            py::arg("input"), py::arg("matrix"))
         .def("sim_size", &Simulation::sim_size)
         .def("step_size", &Simulation::step_size)
         // Per-step co-simulation hooks (aether_sims D4): callables (i, t).
