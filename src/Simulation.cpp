@@ -102,6 +102,30 @@ void simulation(py::module &m)
             [](Simulation &self, Matrix &matrix, const std::string &label) {
                 return self.jj_ic(matrix, label);
             },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "jj_phase",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.jj_phase(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "jj_voltage",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.jj_voltage(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "jj_current",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.jj_current(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "jj_power",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.jj_power(matrix, label);
+            },
             py::arg("matrix"), py::arg("label"));
 }
 
