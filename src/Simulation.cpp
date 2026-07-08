@@ -97,6 +97,16 @@ void simulation(py::module &m)
                 self.set_all_temperatures(matrix, T);
             },
             py::arg("matrix"), py::arg("T"))
+        // aether_sims D8: drive a junction's Ic(Ictrl) law directly (static
+        // per-junction trim / Python-hook co-sim path). CTRL=-bound junctions
+        // are fed by the engine after every solve instead.
+        .def(
+            "set_jj_control_current",
+            [](Simulation &self, Matrix &matrix, const std::string &label,
+               double ictrl) {
+                self.set_jj_control_current(matrix, label, ictrl);
+            },
+            py::arg("matrix"), py::arg("label"), py::arg("ictrl"))
         .def(
             "jj_ic",
             [](Simulation &self, Matrix &matrix, const std::string &label) {
