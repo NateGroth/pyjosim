@@ -136,6 +136,63 @@ void simulation(py::module &m)
             [](Simulation &self, Matrix &matrix, const std::string &label) {
                 return self.jj_power(matrix, label);
             },
+            py::arg("matrix"), py::arg("label"))
+        // aether_sims D11: per-memristor electro-thermal access by label
+        // (device state g + T_loc; power feeds the lumped thermal network).
+        .def(
+            "set_memristor_temperature",
+            [](Simulation &self, Matrix &matrix, const std::string &label,
+               double T) {
+                py::scoped_estream_redirect cerr;
+                self.set_memristor_temperature(matrix, label, T);
+            },
+            py::arg("matrix"), py::arg("label"), py::arg("T"))
+        .def(
+            "set_memristor_g",
+            [](Simulation &self, Matrix &matrix, const std::string &label,
+               double g) { self.set_memristor_g(matrix, label, g); },
+            py::arg("matrix"), py::arg("label"), py::arg("g"))
+        .def(
+            "memristor_g",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.memristor_g(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "memristor_temperature",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.memristor_temperature(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "memristor_voltage",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.memristor_voltage(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "memristor_current",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.memristor_current(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "memristor_power",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.memristor_power(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "memristor_resistance",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.memristor_resistance(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "memristor_extrapolated",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.memristor_extrapolated(matrix, label);
+            },
             py::arg("matrix"), py::arg("label"));
 }
 
