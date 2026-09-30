@@ -71,6 +71,9 @@ void simulation(py::module &m)
             py::arg("input"), py::arg("matrix"))
         .def("sim_size", &Simulation::sim_size)
         .def("step_size", &Simulation::step_size)
+        // aether_sims T33-R1: the run-log of the engine's effective step
+        .def("requested_step", &Simulation::requested_step)
+        .def("halvings", &Simulation::halvings)
         // Per-step co-simulation hooks (aether_sims D4): callables (i, t).
         .def("set_pre_step_hook",
              [](Simulation &self, std::function<void(int64_t, double)> f) {

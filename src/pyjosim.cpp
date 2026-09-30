@@ -1,3 +1,4 @@
+#include "JoSIM/EngineId.hpp"
 #include <pybind11/pybind11.h>
 
 #include <cstdlib>
@@ -27,11 +28,16 @@ PYBIND11_MODULE(pyjosim, m)
 
     m.doc() = "JoSIM python interface";
 
+    // aether_sims T33-R1: the engine identity (the JoSIM fork tag).
+    m.def("engine_id", []() { return std::string(JoSIM::ENGINE_ID); },
+          "The identity of the JoSIM engine this module was built from.");
+
     // aether_sims 4TJJ campaign: deterministic Langevin noise. The engine's
     // NOISE() sources draw from the process-global rand() stream, which
     // Input::parse_input seeds from wall-clock time (srand(time(NULL))).
     // Re-seeding AFTER parse and BEFORE Matrix/Simulation construction makes
-    // a noisy transient bit-reproducible for a given seed.
+    // a noisy transient bit-reproducible for a given seed (T33-R1: each
+    // source draws its key from that stream when the Matrix builds it).
     m.def("seed_noise", [](unsigned int seed) { std::srand(seed); },
           "Seed the engine's global noise RNG (call after Input.parse_input, "
           "before constructing Simulation).");

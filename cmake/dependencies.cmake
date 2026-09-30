@@ -15,10 +15,12 @@ if(EXISTS "${_AETHER_JOSIM_DIR}/CMakeLists.txt")
   set(CPM_josim_SOURCE "${_AETHER_JOSIM_DIR}" CACHE PATH "Local JoSIM fork submodule")
 endif()
 
+# T33-R1: a standalone build (no in-tree submodule) fetches the Johnson-fixed fork
+# (the bindings include JoSIM/EngineId.hpp, which only that tag carries).
 CPMAddPackage(
   NAME josim
   GITHUB_REPOSITORY NateGroth/JoSIM
-  GIT_TAG master
+  GIT_TAG aether-josim-v1-johnson
   OPTIONS
     "MAKING_STATIC_BUILD ON"
 )
