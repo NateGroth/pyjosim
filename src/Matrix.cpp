@@ -26,7 +26,13 @@ void matrix(py::module &m)
                 find_relevant_traces(input, *matrix);
                 return matrix;
             }),
-            py::keep_alive<1, 2>());
+            py::keep_alive<1, 2>())
+        // aether_sims T35: how the run-level .ctrltau field was applied --
+        // coupled junctions that took the field / kept a card CTRLLAG / run
+        // memoryless (the record's D8 law).
+        .def_readonly("ctrl_tau_field", &Matrix::ctrlTauField)
+        .def_readonly("ctrl_tau_card", &Matrix::ctrlTauCard)
+        .def_readonly("ctrl_tau_none", &Matrix::ctrlTauNone);
 }
 
 } // namespace pyjosim

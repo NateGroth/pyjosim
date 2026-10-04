@@ -17,10 +17,11 @@ endif()
 
 # T33-R1: a standalone build (no in-tree submodule) fetches the Johnson-fixed fork
 # (the bindings include JoSIM/EngineId.hpp, which only that tag carries).
+# T35: the ctrl-tau bindings need the v2 engine (Simulation::jj_ctrl_*).
 CPMAddPackage(
   NAME josim
   GITHUB_REPOSITORY NateGroth/JoSIM
-  GIT_TAG aether-josim-v1-johnson
+  GIT_TAG aether-josim-v2-ctrl-tau
   OPTIONS
     "MAKING_STATIC_BUILD ON"
 )

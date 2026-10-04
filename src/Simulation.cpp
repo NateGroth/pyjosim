@@ -116,6 +116,27 @@ void simulation(py::module &m)
                 return self.jj_ic(matrix, label);
             },
             py::arg("matrix"), py::arg("label"))
+        // aether_sims T35: the coupling lag as applied (s), its source (0 the
+        // memoryless D8 law, 1 the card's CTRLLAG, 2 the run-level .ctrltau),
+        // and the control current the law saw at the last solve.
+        .def(
+            "jj_ctrl_lag",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.jj_ctrl_lag(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "jj_ctrl_lag_source",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.jj_ctrl_lag_source(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
+        .def(
+            "jj_ctrl_current",
+            [](Simulation &self, Matrix &matrix, const std::string &label) {
+                return self.jj_ctrl_current(matrix, label);
+            },
+            py::arg("matrix"), py::arg("label"))
         .def(
             "jj_phase",
             [](Simulation &self, Matrix &matrix, const std::string &label) {
